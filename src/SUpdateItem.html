@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>IMS</title>
+</head>
+<body>
+<div onkeydown="checkEnterKey(event)">
+<h4>Enter Item details</h4>
+    <form>
+        <label for="itemID">ID : <?= itemID ?></label>
+        <br><br>
+        <label for="itemName">Current Name : <?= itemNam ?></label><br>
+        New Name :
+        <input type="text" id="itemName" name="itemName" required>
+        <br><br>
+        <label for="quantity">Current Quantity : <?= itemQuantity ?></label><br>
+        New Quantity :
+        <input type="text" id="quantity" name="quantity" required>
+        <br><br>
+        <label for="rborrow">Days after which Employee can borrow it again(Current): <?= itemReborrow ?></label><br>
+        New Reborrow Days :
+        <input type="text" id="rborrow" name="rborrow" required>
+        <br><br>
+        <label for="status">Current Status(R-Returnable / NR-Non returnable) : <?= itemStatus ?></label><br>
+        New Status :<br>
+        <input type="radio" id="R" name="status" value="R"> Returnable
+        <br>
+        <input type="radio" id="NR" name="status" value="NR"> Non Returnable
+        <br><br> 
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+</div>
+    <script>
+        function checkEnterKey(event) {
+              if (event.key === "Enter" || event.keyCode === 13) {
+                      submitForm();
+              }
+        }
+        function submitForm() {
+            var itemID = <?= itemID ?>;
+            var itemName = document.getElementById('itemName').value;
+            var quantity= document.getElementById('quantity').value;
+            var rborrow= document.getElementById('rborrow').value;
+            var status=null;
+            if(document.getElementsByName('status')[0].checked)
+            status = document.getElementById('R').value; 
+            else if(document.getElementsByName('status')[1].checked)
+            status = document.getElementById('NR').value; 
+            else
+            status='';
+            // Pass data to Google Apps Script function
+            google.script.run.withSuccessHandler(onSuccess).updateFormDataStorage(itemID,itemName,quantity,rborrow,status);
+            google.script.host.close();
+        }
+        function onSuccess() {
+            // Clear the textboxes
+            document.getElementById('itemID').value= '' ;
+            document.getElementById('itemName').value= '' ;
+            document.getElementById('quantity').value= '' ;
+            document.getElementById('rborrow').value= '' ;
+            document.getElementsByName('status')[0].checked= false ;
+            document.getElementsByName('status')[1].checked= false ;
+        }
+    </script>
+
+</body>
+</html>
