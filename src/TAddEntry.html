@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>IMS</title>
+</head>
+<body>
+
+<h4>Enter Item details</h4>
+<div onkeydown="checkEnterKey(event)">
+    <form>
+        <label for="itemID">Item ID :</label>
+        <input type="text" id="itemID" name="itemID" required>
+        <br><br>
+        <label for="itemName">Item Name :</label>
+        <input type="text" id="itemName" name="itemName" required>
+        <br><br>
+        <label for="empId">Employee ID :</label>
+        <input type="text" id="empId" name="empId" required>
+        <br><br>
+        <label for="quantity">Quantity :</label>
+        <input type="text" id="quantity" name="quantity" required>
+        <br><br>
+        <label for="trans">Transaction(Borrow/Return) :</label><br>
+        <input type="radio" id="borrow" name="trans" value="Borrow"> Borrow
+        <br>
+        <input type="radio" id="return" name="trans" value="Return"> Return
+        <br><br>
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+</div>
+    <script>
+        function checkEnterKey(event) {
+              if (event.key === "Enter" || event.keyCode === 13) {
+                      submitForm();
+              }
+        }
+        function submitForm() {
+            var itemID = document.getElementById('itemID').value;
+            var itemName = document.getElementById('itemName').value;
+            var empId = document.getElementById('empId').value;
+            var quantity= document.getElementById('quantity').value;
+            var trans=null;
+            if(document.getElementsByName('trans')[0].checked)
+            trans = document.getElementById('borrow').value; 
+            else
+            trans = document.getElementById('return').value; 
+            // Pass data to Google Apps Script function
+            google.script.run.withSuccessHandler(onSuccess).processFormDataTransactions(itemID,itemName,empId,quantity,trans);
+        }
+        function onSuccess() {
+            // Clear the textboxes
+            document.getElementById('itemID').value= '' ;
+            document.getElementById('itemName').value= '' ;
+            document.getElementById('quantity').value= '' ;
+            document.getElementById('empId').value= '' ;
+            document.getElementsByName('trans')[0].checked= false ;
+            document.getElementsByName('trans')[1].checked= false ;
+        }
+    </script>
+
+</body>
+</html>
